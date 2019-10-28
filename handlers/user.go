@@ -1,9 +1,21 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"api/database/models"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+)
 
 func CreateUser (c *gin.Context) {
-	c.JSON(200, `message: "CreateUser"`)
+	db := c.MustGet("db").(* gorm.DB)
+
+	var user models.User
+	if err := c.BindJSON(&user); err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+	db.Create(&user)
+	c.JSON(200, user)
 }
 
 func GetUser (c *gin.Context) {
@@ -11,7 +23,10 @@ func GetUser (c *gin.Context) {
 }
 
 func GetUsers (c *gin.Context) {
-	c.JSON(200, `message: "GetUsers"`)
+	db := c.MustGet("db").(* gorm.DB)
+	var users []models.User
+	db.Find(&users)
+	c.JSON(200, users)
 }
 
 func DeleteUser (c *gin.Context) {

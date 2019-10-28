@@ -1,6 +1,7 @@
 package database
 
 import (
+	"api/database/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -24,7 +25,7 @@ func Init() (*gorm.DB, error) {
 		panic(err)
 	}
 	db.LogMode(true)
-	// todo : add migration
+	migrate(db)
 	fmt.Println("Database connected")
 	return db, err
 }
@@ -35,4 +36,10 @@ func Inject(db *gorm.DB) gin.HandlerFunc {
 		c.Set("db", db)
 		c.Next()
 	}
+}
+
+// auto migrate
+func migrate(db *gorm.DB) {
+	db.AutoMigrate(&models.User{})
+	fmt.Println("Auto migration processed !")
 }
