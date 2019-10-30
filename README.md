@@ -1,6 +1,6 @@
 # GOLANG API STARTER
 
-## Start Sercer
+## Start Server
 
 ```
 go run main.go
